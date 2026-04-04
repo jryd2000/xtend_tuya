@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 import asyncio
+import base64
+import json as json_module
 from typing import cast, Callable, TYPE_CHECKING
 from dataclasses import dataclass, field
 from datetime import datetime, UTC
@@ -185,6 +187,23 @@ class XTSensorEntityDescription(TuyaSensorEntityDescription, frozen=True):
             supported_descriptors=supported_descriptors,
         )
 
+class XTDPCodeInitiativeMessageWrapper(TuyaDPCodeRawWrapper):
+    """Wrapper that decodes a base64-encoded JSON RAW dp and returns it as a string."""
+
+    def read_device_status(self, device) -> str | None:
+        raw_bytes = super().read_device_status(device)
+        if raw_bytes is None:
+            return None
+        try:
+            decoded = json_module.loads(raw_bytes.decode("utf-8"))
+            decoded.pop("files", None)
+            return json_module.dumps(decoded)
+        except Exception:
+            try:
+                # raw_bytes may already be a str if the field was stored decoded
+                return json_module.dumps(json_module.loads(raw_bytes))
+            except Exception:
+                return str(raw_bytes)
 
 # Commonly used battery sensors, that are re-used in the sensors down below.
 BATTERY_SENSORS: tuple[XTSensorEntityDescription, ...] = (
@@ -1886,6 +1905,15 @@ SENSORS: dict[str, tuple[XTSensorEntityDescription, ...]] = {
         ),
     ),
     "sp": (*BATTERY_SENSORS,),
+    "sp_wnq": (
+        XTSensorEntityDescription(
+            key=XTDPCode.INITIATIVE_MESSAGE,
+            translation_key="initiative_message",
+            entity_registry_enabled_default=True,
+            wrapper_class=(XTDPCodeInitiativeMessageWrapper,),
+        ),
+        *BATTERY_SENSORS,
+    ),  
     "wk": (
         *BATTERY_SENSORS,
         *TEMPERATURE_SENSORS,
