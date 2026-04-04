@@ -840,6 +840,7 @@ class XTDPCode(StrEnum):
     INDUCTION_CLEAN = "Induction_Clean"
     INDUCTION_DELAY = "induction_delay"
     INDUCTION_INTERVAL = "induction_interval"
+    INITIATIVE_MESSAGE = "initiative_message"
     INFRARED_SENSOR_SWITCH = "infrared_sensor_switch"
     IR_CONTROL = "ir_control"
     KEY_REC = "key_rec"
