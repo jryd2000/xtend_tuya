@@ -1854,6 +1854,9 @@
             "induction_interval": {
                 "name": "Induction interval"
             },
+            "initiative_message": {
+                "name": "Initiative message"
+            },             
             "jtmspro_alarm_lock": {
                 "name": "Lock alarm",
                 "state": {
