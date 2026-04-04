@@ -73,11 +73,13 @@ from .ha_tuya_integration.tuya_integration_imports import (
     TuyaSensorEntityDescription,
     TuyaDPCode,
     TuyaIntegerTypeInformation,
+    TuyaRawTypeInformation,
     TuyaDPCodeWrapper,
     TuyaDPCodeBooleanWrapper,
     TuyaDPCodeIntegerWrapper,
     TuyaDPCodeEnumWrapper,
     TuyaDPCodeStringWrapper,
+    TuyaDPCodeRawWrapper,
 )
 from tuya_device_handlers.definition.sensor import (
     TuyaSensorDefinition,
