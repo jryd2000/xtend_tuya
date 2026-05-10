@@ -189,19 +189,19 @@ class XTSensorEntityDescription(TuyaSensorEntityDescription, frozen=True):
         )
 
 class XTDPCodeInitiativeMessageWrapper(TuyaDPCodeStringWrapper):
-    """Wrapper that decodes a base64-encoded JSON RAW dp and returns it as a string."""
+    """Wrapper that decodes a base64-encoded JSON dp and returns it as a string."""
 
     def read_device_status(self, device) -> str | None:
-        string_data = super().read_device_status(device)
-        if string_data is None:
+        base64_string = super().read_device_status(device)
+        if base64_string is None:
             return None
         try:
-            decoded = json_module.loads(string_data)
+            decoded = json_module.loads(base64.b64decode(base64_string).decode('utf-8'))
             decoded.pop("files", None)
             return json_module.dumps(decoded)
         except Exception:
             try:
-                # raw_bytes may already be a str if the field was stored decoded
+                # base64_string may already be a str if the field was stored decoded
                 return json_module.dumps(json_module.loads(string_data))
             except Exception:
                 return string_data
