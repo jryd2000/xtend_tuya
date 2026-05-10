@@ -192,19 +192,19 @@ class XTDPCodeInitiativeMessageWrapper(TuyaDPCodeStringWrapper):
     """Wrapper that decodes a base64-encoded JSON RAW dp and returns it as a string."""
 
     def read_device_status(self, device) -> str | None:
-        raw_bytes = super().read_device_status(device)
-        if raw_bytes is None:
+        string_data = super().read_device_status(device)
+        if string_data is None:
             return None
         try:
-            decoded = json_module.loads(raw_bytes.decode("utf-8"))
+            decoded = json_module.loads(string_data)
             decoded.pop("files", None)
             return json_module.dumps(decoded)
         except Exception:
             try:
                 # raw_bytes may already be a str if the field was stored decoded
-                return json_module.dumps(json_module.loads(raw_bytes))
+                return json_module.dumps(json_module.loads(string_data))
             except Exception:
-                return str(raw_bytes)
+                return string_data
 
 # Commonly used battery sensors, that are re-used in the sensors down below.
 BATTERY_SENSORS: tuple[XTSensorEntityDescription, ...] = (
