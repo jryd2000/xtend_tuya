@@ -188,7 +188,7 @@ class XTSensorEntityDescription(TuyaSensorEntityDescription, frozen=True):
             supported_descriptors=supported_descriptors,
         )
 
-class XTDPCodeInitiativeMessageWrapper(TuyaDPCodeRawWrapper):
+class XTDPCodeInitiativeMessageWrapper(TuyaDPCodeStringWrapper):
     """Wrapper that decodes a base64-encoded JSON RAW dp and returns it as a string."""
 
     def read_device_status(self, device) -> str | None:
