@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import cast
 from dataclasses import dataclass
 from tuya_device_handlers.definition.select import (
-    TuyaSelectDefinition,
+    SelectDefinition,
     get_default_definition,
 )
 from homeassistant.const import EntityCategory, Platform
@@ -52,7 +52,7 @@ class XTSelectEntityDescription(TuyaSelectEntityDescription):
         device: XTDevice,
         device_manager: MultiManager,
         description: XTSelectEntityDescription,
-        definition: TuyaSelectDefinition,
+        definition: SelectDefinition,
     ) -> XTSelectEntity:
         return XTSelectEntity(
             device=device,
@@ -204,18 +204,14 @@ SELECTS: dict[str, tuple[XTSelectEntityDescription, ...]] = {
             entity_category=EntityCategory.CONFIG,
         ),
         XTSelectEntityDescription(
-            key=XTDPCode.CLEAN,
-            translation_key="cat_litter_box_clean",
-            entity_category=EntityCategory.CONFIG,
-        ),
-        XTSelectEntityDescription(
-            key=XTDPCode.EMPTY,
-            translation_key="cat_litter_box_empty",
-            entity_category=EntityCategory.CONFIG,
-        ),
-        XTSelectEntityDescription(
             key=XTDPCode.WORK_MODE,
             translation_key="cat_litter_box_work_mode",
+            entity_category=EntityCategory.CONFIG,
+        ),
+        # Ti+ / DOEL ti+TpCTbt-01: weight unit selector
+        XTSelectEntityDescription(
+            key=XTDPCode.UNIT_SWITCH,
+            translation_key="unit_switch",
             entity_category=EntityCategory.CONFIG,
         ),
     ),
@@ -416,7 +412,7 @@ class XTSelectEntity(XTEntity, TuyaSelectEntity):
         device: XTDevice,
         device_manager: MultiManager,
         description: XTSelectEntityDescription,
-        definition: TuyaSelectDefinition,
+        definition: SelectDefinition,
     ) -> None:
         """Init XT select."""
         super(XTSelectEntity, self).__init__(
@@ -446,7 +442,7 @@ class XTSelectEntity(XTEntity, TuyaSelectEntity):
         description: XTSelectEntityDescription,
         device: XTDevice,
         device_manager: MultiManager,
-        definition: TuyaSelectDefinition,
+        definition: SelectDefinition,
     ) -> XTSelectEntity:
         if hasattr(description, "get_entity_instance") and callable(
             getattr(description, "get_entity_instance")
