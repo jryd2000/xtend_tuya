@@ -1976,7 +1976,6 @@ SENSORS: dict[str, tuple[XTSensorEntityDescription, ...]] = {
             entity_registry_enabled_default=False,
         ),
     ),
-<<<<<<< HEAD
     "sp": (*BATTERY_SENSORS,),
     "sp_wnq": (
         XTSensorEntityDescription(
@@ -1987,12 +1986,7 @@ SENSORS: dict[str, tuple[XTSensorEntityDescription, ...]] = {
         ),
         *BATTERY_SENSORS,
     ),  
-    "wk": (
-        *TEMPERATURE_SENSORS,
-    ),
-=======
     "wk": (*TEMPERATURE_SENSORS,),
->>>>>>> upstream/main
     "wnykq": (
         XTSensorEntityDescription(
             key=XTDPCode.IR_CONTROL,
