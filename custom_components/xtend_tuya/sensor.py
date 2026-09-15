@@ -3,6 +3,7 @@
 from __future__ import annotations
 import asyncio
 import base64
+import json as json_module
 from typing import cast, Callable, TYPE_CHECKING, Any
 from dataclasses import dataclass, field
 from datetime import datetime, UTC
@@ -109,6 +110,24 @@ if TYPE_CHECKING:
     )
 
 COMPOUND_KEY: list[str | tuple[str, ...]] = ["key", "dpcode"]
+
+class XTDPCodeInitiativeMessageWrapper(TuyaDPCodeStringWrapper):
+    """Wrapper that decodes a base64-encoded JSON dp and returns it as a string."""
+
+    def read_device_status(self, device) -> str | None:
+        base64_string = super().read_device_status(device)
+        if base64_string is None:
+            return None
+        try:
+            decoded = json_module.loads(base64.b64decode(base64_string).decode('utf-8'))
+            decoded.pop("files", None)
+            return json_module.dumps(decoded)
+        except Exception:
+            try:
+                # base64_string may already be a str if the field was stored decoded
+                return json_module.dumps(json_module.loads(string_data))
+            except Exception:
+                return string_data
 
 class XTB64ToDateTimeStringWrapper(TuyaDPCodeStringWrapper[datetime]):
     def read_device_status(self, device: TuyaCustomerDevice) -> datetime | None:
@@ -1977,6 +1996,16 @@ SENSORS: dict[str, tuple[XTSensorEntityDescription, ...]] = {
             entity_registry_enabled_default=False,
         ),
     ),
+    "sp": (*BATTERY_SENSORS,),
+    "sp_wnq": (
+        XTSensorEntityDescription(
+            key=XTDPCode.INITIATIVE_MESSAGE,
+            translation_key="initiative_message",
+            entity_registry_enabled_default=True,
+            wrapper_class=(XTDPCodeInitiativeMessageWrapper,),
+        ),
+        *BATTERY_SENSORS,
+    ),     
     "wk": (*TEMPERATURE_SENSORS,),
     "wnykq": (
         XTSensorEntityDescription(
