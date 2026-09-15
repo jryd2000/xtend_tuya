@@ -912,6 +912,7 @@ class XTDPCode(StrEnum):
     INDUCTION_DELAY = "induction_delay"
     INDUCTION_INTERVAL = "induction_interval"
     INFRARED_SENSOR_SWITCH = "infrared_sensor_switch"
+    INITIATIVE_MESSAGE = "initiative_message"
     IN_CLEAN = "in_clean"  # auto-clean completed flag (dp121)
     IPC_MOVEMENT_DETECT = "ipc_movement_detect"
     IR_CONTROL = "ir_control"
